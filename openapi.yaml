@@ -1,0 +1,131 @@
+openapi: 3.0.1
+info:
+  title: Users API
+  description: API to administrate users and your posts
+  version: 0.0.1
+  termsOfService: https://mockapi.io
+  contact:
+    name: Suport to Devs
+    email: contato@example.com
+    url: https://mockapi.io
+  license:
+    name: "License: GPLv3"
+    url: https://www.gnu.org/licences/gpl-3.0.html
+externalDocs:
+  description: Burocratic Documentation
+  url: https://mockapi.io
+servers:
+- url: https://638ba46481df38ab346d86be.mockapi.io/firstapi/v1/
+  description: Test API
+- url: https://google.com
+  description: Prod API
+paths:
+  /users:
+    get:
+      summary: Get all users from application
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+    post:
+      summary: Create new user
+      description: "Create a new user using this endpoint."
+      requestBody:
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /users/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Get an user by ID
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        404:
+          description: User Not Found
+          content:
+            application/json:
+              example: "Not Found"
+    patch:
+      summary: Update user by ID
+      requestBody:
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    delete:
+      summary: Delete user by ID
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              example: "User deleted successfully"
+        404:
+          description: User Not Found
+          content:
+            application/json:
+              example: "Not Found"
+security:
+- auth: []
+components:
+  schemas:
+    User:
+      type: object
+      description: "Table where is saved user properties"
+      properties:
+        id:
+          type: integer
+          description: "Unique identifier from user on database"
+        name:
+          type: string
+          description: "Column where is saved username on database"
+        avatar:
+          type: string
+          description: "image stored as converted base64 from user"
+        createdAt:
+          type: number
+          description: "A timestamp when user was created"
+    Users:
+      type: array
+      description: "Group of one or more users from database"
+      items:
+        $ref: "#/components/schemas/User"
+  securitySchemes:
+    auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
